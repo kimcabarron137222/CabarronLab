@@ -1,12 +1,17 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.emoji}>📱</Text>
         <Text style={styles.title}>Week1Labs</Text>
         <Text style={styles.subtitle}>Built by you, one lab at a time</Text>
+
+        <Button
+          title="Add a Task"
+          onPress={() => navigation.navigate('AddTask')}
+        />
       </View>
 
       <View style={styles.footer}>
