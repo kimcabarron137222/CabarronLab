@@ -1,4 +1,5 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -14,6 +15,39 @@ export default function AddTaskScreen() {
   const [taskText, setTaskText] = useState("");
   const [tasks, setTasks] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+  async function loadTasks() {
+    try {
+      const savedData = await AsyncStorage.getItem("tasks");
+
+      if (savedData !== null) {
+        setTasks(JSON.parse(savedData));
+      }
+    } catch (error) {
+      console.log("Failed to load tasks:", error);
+    } finally {
+      setIsLoaded(true);
+    }
+  }
+
+  loadTasks();
+}, []);
+
+useEffect(() => {
+  async function saveTasks() {
+    if (!isLoaded) return;
+
+    try {
+      await AsyncStorage.setItem("tasks", JSON.stringify(tasks));
+    } catch (error) {
+      console.log("Failed to save tasks:", error);
+    }
+  }
+
+  saveTasks();
+}, [tasks, isLoaded]);
 
   function handleAddTask() {
     if (taskText.trim() === "") {
