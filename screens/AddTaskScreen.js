@@ -16,6 +16,14 @@ export default function AddTaskScreen() {
   const [tasks, setTasks] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [quote, setQuote] = useState("Loading today's motivation...");
+
+  useEffect(() => {
+    fetch("https://api.quotable.io/random")
+    .then((response) => response.json())
+    .then((data) => setQuote(data.content))
+    .catch(() => setQuote("Believe in yourself and get it done!"));
+  }, []);
 
   useEffect(() => {
   async function loadTasks() {
@@ -76,6 +84,17 @@ useEffect(() => {
 
   return (
     <View style={styles.container}>
+    <Text style={styles.quote}>💬 {quote}</Text>
+
+<Button
+  title="New Quote"
+  onPress={() => {
+    fetch("https://dummyjson.com/quotes/random")
+      .then((response) => response.json())
+      .then((data) => setQuote(data.quote))
+      .catch(() => setQuote("Believe in yourself and get it done!"));
+  }}
+/>
       <Text style={styles.heading}>Add a Task</Text>
 
       <TextInput
@@ -168,5 +187,12 @@ const styles = StyleSheet.create({
     color: "#1E8A7A",
     textAlign: "center",
     marginVertical: 12,
+  },
+
+  quote: {
+  fontStyle: "italic",
+  color: "#6B7280",
+  marginBottom: 16,
+  textAlign: "center",
   },
 });
